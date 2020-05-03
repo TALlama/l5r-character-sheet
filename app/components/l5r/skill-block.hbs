@@ -1,0 +1,8 @@
+<section class='skill-block skill-block---l5r skill-block---{{this.type}}'>
+  <header class='skill-block--header'>{{title-case @type}} skills</header>
+  
+  <article class='skill-block--body'>
+    <DescriptionList @terms={{this.approaches}} class='skill-block--approaches' {{on "click" (fn this.args.onApproach)}} />
+    <DescriptionList @terms={{this.skills}} class='skill-block--skills' {{on "click" (fn this.args.onRollSkill)}} />
+  </article>
+</section>

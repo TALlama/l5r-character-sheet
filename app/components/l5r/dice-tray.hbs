@@ -1,0 +1,15 @@
+<article class='dice-tray'>
+  {{#each @pool.dice as |die|}}
+    <article class='rollbox--keeper {{if die.kept 'rollbox--keeper---kept'}} {{if die.distinction (concat 'rollbox--keeper---' die.distinction)}}'>
+      <label class='die die---rerolling' {{on "animationend" (fn this.removeRerolling)}}>
+        <input type='checkbox' class='sr-only' checked={{die.kept}} {{on "change" (fn this.toggleKept die)}} />
+        <SvgUse @ids={{die.svgIds}} @width='100' @height='100' />
+      </label>
+      <section class='rollbox--keeper-actions'>
+        <a href='#' class='die--action die--action---reroll' {{on "click" (fn this.reroll die)}}>reroll</a>
+      </section>
+    </article>
+  {{/each}}
+  
+  {{yield}}
+</article>

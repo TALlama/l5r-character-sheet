@@ -1,0 +1,97 @@
+<article class='character-sheet character-sheet---l5r character-sheet---current-stance-is-{{@model.stance}}' style='--portrait-url: url({{@model.portrait_url}});'>
+  <header class='character-sheet--name'>{{@model.name}}</header>
+  
+  <section class='character-sheet--stance-logos'>
+    <SvgUse class='character-sheet--stance-logo character-sheet--stance-logo---air' viewBox='9 9 82 82' @id='air-logo' fill='var(--air-color)' />
+    <SvgUse class='character-sheet--stance-logo character-sheet--stance-logo---earth' viewBox='9 9 82 82' @id='earth-logo' fill='var(--earth-color)' />
+    <SvgUse class='character-sheet--stance-logo character-sheet--stance-logo---fire' viewBox='9 9 82 82' @id='fire-logo' fill='var(--fire-color)' />
+    <SvgUse class='character-sheet--stance-logo character-sheet--stance-logo---water' viewBox='9 9 82 82' @id='water-logo' fill='var(--water-color)' />
+    <SvgUse class='character-sheet--stance-logo character-sheet--stance-logo---void' viewBox='9 9 82 82' @id='void-logo' fill='var(--void-color)' />
+  </section>
+  
+  
+  
+  <DescriptionList @terms={{this.background}} class='character-sheet--background'/>
+  <DescriptionList @terms={{@model.rings}} class='character-sheet--rings' {{on "click" (fn this.ringClick)}} as |term definition|>
+    <SvgUse class='character-sheet--ring-logo' viewBox='4 4 96 96' @id={{concat term '-logo'}} />
+  </DescriptionList>
+  <DescriptionList @terms={{@model.socialStanding}} class='character-sheet--social-standing dl---circles' {{on "click" (fn this.socialStandingClick)}} as |term definition|>
+    {{signed-modifier (get @model 'modifiers' term)}}
+  </DescriptionList>
+  
+  <article class='character-sheet--skills'>
+    <L5r::SkillBlock @type='artisan' @sheet={{this}} @onApproach={{this.approachChange}} @onRollSkill={{this.rollSkill}} />
+    <L5r::SkillBlock @type='martial' @sheet={{this}} @onApproach={{this.approachChange}} @onRollSkill={{this.rollSkill}} />
+    <L5r::SkillBlock @type='scholar' @sheet={{this}} @onApproach={{this.approachChange}} @onRollSkill={{this.rollSkill}} />
+    <L5r::SkillBlock @type='social' @sheet={{this}} @onApproach={{this.approachChange}} @onRollSkill={{this.rollSkill}} />
+    <L5r::SkillBlock @type='trade' @sheet={{this}} @onApproach={{this.approachChange}} @onRollSkill={{this.rollSkill}} />
+  </article>
+  
+  <article class='character-sheet--vitals'>
+    <header class='character-sheet--vitals-header'>Vitals</header>
+    <section class='character-sheet--vital-stats'>
+      <L5r::VitalStat @title='Fatigue & Endurance' @current={{@model.fatigue}} @max={{@model.endurance}}
+        @onUp={{this.gainFatigue}} @onDown={{this.useFatigue}} />
+      <L5r::VitalStat @title='Strife & Composure' @current={{@model.strife}} @max={{@model.composure}}
+        @onUp={{this.gainStrife}} @onDown={{this.useStrife}} />
+      <L5r::VitalStat @title='Void points' @current={{this.voidPoints}} @max={{@model.rings.void}}
+        @onUp={{this.gainVoidPoint}} @onDown={{this.useVoidPoint}}
+        class='vital-stat---more-is-better' />
+      <L5r::VitalStat @title='Focus' @max={{this.focus}} />
+      <L5r::VitalStat @title='Vigilance' @max={{this.vigilance}} />
+    </section>
+  </article>
+  
+  <L5r::Rollbox class='character-sheet--rollbox' @dicePools={{array dicePool}} @ringCount={{ringCount}} @skillCount={{skillCount}} @collapsed={{false}} />
+  
+  <article class='character-sheet--moves'>
+    <L5r::Stance @ring={{@model.stance}} />
+    
+    <L5r::Move @title='Portrait' class='character-sheet--portrait'>
+    </L5r::Move>
+    
+    {{#each @model.advantages as |item|}}
+      <L5r::Move @item={{item}} />
+    {{/each}}
+    
+    {{#each @model.disadvantages as |item|}}
+      <L5r::Move @item={{item}} />
+    {{/each}}
+    
+    {{#each @model.techniques as |item|}}
+      <L5r::Move @item={{item}} />
+    {{/each}}
+    
+    <L5r::Move @title='Wealth & possessions'>
+      <ul class='list---inline list---comma-separated'>
+        {{#each @model.equipment as |item|}}
+          <li title='from {{item.from}}'>{{item.name}}</li>
+        {{/each}}
+      </ul>
+    </L5r::Move>
+    <L5r::Move @title='Techniques available'>
+      <ul class='list---inline list---comma-separated'>
+        {{#each @model.techniques_available as |item|}}
+          <li title='from {{item.from}}'><SvgUse @id={{item.name}} class='svg-text' /> {{item.name}}</li>
+        {{/each}}
+      </ul>
+    </L5r::Move>
+  </article>
+  
+  <article class='character-sheet--history'>
+    <ol class='character-sheet--history-entries'>
+      {{#each-in @model.questions as |ix qa|}}
+        <li class='character-sheet--history-entry'>
+          <header class='character-sheet--history-question'>{{humanize qa.step_name}}</header>
+          <cite class='character-sheet--history-meta'>{{#if qa.page}}See {{qa.page}}{{/if}}</cite>
+          <div class='character-sheet--history-answer'>
+            <span class='character-sheet--history-answer-value'>{{qa.answer}}</span>
+            {{qa.detail}}
+          </div>
+        </li>
+      {{/each-in}}
+    </ol>
+  </article>
+  
+  {{yield}}
+</article>

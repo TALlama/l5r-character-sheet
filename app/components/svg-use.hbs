@@ -1,0 +1,6 @@
+<svg viewBox="0 0 100 100" focusable="false" fill={{this.color}} ...attributes x={{@x}} y={{@y}} width={{@width}} height={{@height}}>
+  {{#each this.ids as |id|}}
+    <use href={{id}} x={{@x}} y={{@y}} width={{@width}} height={{@height}}/>
+  {{/each}}
+  {{yield}}
+</svg>

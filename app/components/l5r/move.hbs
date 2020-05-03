@@ -1,0 +1,25 @@
+<article class='move move---l5r move---{{this.ring}}' ...attributes>
+  <header class='move--header'>{{this.title}}{{#if this.item.category}}<SvgUse @id={{this.item.category}} class='svg-text move--category-icon'/>{{/if}}</header>
+  <aside class='metadata move--about'>
+    {{#if this.item.from}}<span class='move--from'>From {{humanize this.item.from}}</span>{{/if}}
+    {{#if this.types}}
+      <ul class='move--types list---inline list---comma-separated'>
+        {{#each this.types as |t|}}<li>{{t}}</li>{{/each}}
+      </ul>
+    {{/if}}
+    {{#if this.item.page}}<span class='move--page'>See {{this.item.page}}</span>{{/if}}
+  </aside>
+  
+  <article class='move--body'>
+    {{#if this.item}}
+      <ul class='list---circle'>
+        {{#each this.item.effects as |effect|}}
+          <li>{{markdown-to-html markdown=effect extensions='l5r'}}</li>
+        {{/each}}
+      </ul>
+    {{/if}}
+    
+    {{markdown-to-html markdown=this.body extensions='l5r'}}
+    {{yield}}
+  </article>
+</article>

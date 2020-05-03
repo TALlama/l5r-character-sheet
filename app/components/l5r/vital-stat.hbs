@@ -1,0 +1,16 @@
+<article class='vital-stat vital-stat---l5r {{if this.atZero "vital-stat---zero"}} {{if this.atMax "vital-stat---max"}}' style={{style}} ...attributes>
+  <header class='vital-stat--header'>{{this.args.title}}</header>
+  
+  <section class='vital-stat--actions'>
+    {{#if @onDown}}<button class='vital-stat--button' disabled={{this.atZero}} {{on "click" (fn @onDown)}}>-</button>{{/if}}
+    {{#if @onUp}}<button class='vital-stat--button' disabled={{this.atMax}} {{on "click" (fn @onUp)}}>+</button>{{/if}}
+  </section>
+  
+  <section class='vital-stat--values'>
+    {{#if this.args.current}}
+      <span class='vital-stat--current-value'>{{this.args.current}}</span>
+      of
+    {{/if}}
+    <span class='vital-stat--max-value'>{{this.args.max}}</span>
+  </section>
+</article>

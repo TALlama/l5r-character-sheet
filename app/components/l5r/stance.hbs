@@ -1,0 +1,15 @@
+<article class='move move---l5r move---stance move---{{this.ring}}'>
+  <header class='move--header'>
+    <span class='move--title'>{{title-case this.title}}</span>
+  </header>
+  <aside class='metadata move--about'>
+    <span class='move--page'>See p251</span>
+  </aside>
+  
+  
+  <article class='move--body'>
+    {{markdown-to-html markdown=this.body extensions='l5r'}}
+  
+    {{yield}}
+  </article>
+</article>

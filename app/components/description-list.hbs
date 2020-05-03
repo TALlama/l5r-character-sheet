@@ -1,0 +1,6 @@
+<dl ...attributes>
+  {{#each-in @terms as |term definition|}}
+    <dt class='description-list---{{dasherize term}}'>{{title-case term}}</dt>
+    <dd class='description-list---{{dasherize term}}'>{{definition}}{{yield term definition}}</dd>
+  {{/each-in}}
+</dl>

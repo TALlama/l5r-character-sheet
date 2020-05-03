@@ -1,0 +1,113 @@
+/*
+* Hide only visually, but have it available for screen readers:
+* https://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+*
+* 1. For long content, line feeds are not interpreted as spaces and small width
+*    causes content to wrap 1 word per line:
+*    https://medium.com/@jessebeach/beware-smushed-off-screen-accessible-text-5952a4c2cbfe
+*/
+
+@import 'reset';
+
+.hidden {
+  display: none !important;
+}
+
+.sr-only {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+  /* 1 */
+  
+  /*
+  * Extends the .sr-only class to allow the element
+  * to be focusable when navigated to via the keyboard:
+  * https://www.drupal.org/node/897638
+  */
+
+  &.focusable:active,
+  &.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    white-space: inherit;
+    width: auto;
+  }
+}
+
+@import 'rollbox';
+@import 'l5r/character-sheet';
+
+html {
+  font-family: sans-serif;
+  background-color: white;
+  color: #333;
+  font-weight: 200;
+  
+  --error-color: hsl(  0   90%   60%);
+  --error-bg:    hsl(  0   90%   98%);
+  
+  --info-color: hsl(190   90%   40%);
+  --info-bg:    hsl(190   90%   98%);
+  
+  --secondary-text-color: hsl(  0   0%   0% / 75%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input, button {
+  font-size: 100%;
+}
+
+.list---circle {
+  list-style: circle;
+  li { margin-left: .5rem; }
+  li + li { margin-top: .3rem; }
+}
+
+.list---inline {
+  li { display: inline-block; }
+}
+
+.list---comma-separated {
+  li:not(:last-child):after { content: ", "; }
+}
+
+.metadata {
+  color: var(--secondary-text-color);
+  font-size: 80%;
+}
+
+.svg-text {
+  width: 1.2em;
+  vertical-align: bottom;
+}
+
+.badge {
+  display: inline-block;
+  padding: .3rem;
+  border: 1px solid var(--color);
+  border-radius: 3px;
+  color: var(--color);
+  background: var(--bg);
+  
+  &---info {
+    --color: var(--info-color);
+    --bg: var(--info-bg);
+  }
+  
+  &---error {
+    --color: var(--error-color);
+    --bg: var(--error-bg);
+  }
+}

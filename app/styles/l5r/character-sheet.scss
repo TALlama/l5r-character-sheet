@@ -1,0 +1,581 @@
+html {
+  --label-color:               hsl(  0   0%   0% /  55%);
+  --border-color:              hsl(  0   0%   0% /  75%);
+  --circle-color:              hsl(  0   0%   0% /  75%);
+  --control-border-color:      hsl(  0   0%   0% /  45%);
+  --vital-fill-color:          hsl(  0   0%   0% /  20%);
+  --vital-fill-color-max:      hsl(  0  90%  50% /  70%);
+  --vital-fill-color-max-good: hsl(120  90%  50% /  70%);
+  
+  --air-transparent:      hsl(270 100%  85% /  0%);
+  --earth-transparent:    hsl(120 100%  85% /  0%);
+  --fire-transparent:     hsl( 15 100%  85% /  0%);
+  --water-transparent:    hsl(200 100%  85% /  0%);
+  --void-transparent:     hsl(  0   0%  90% /  0%);
+  
+  --air-bg:      hsl(270 100%  85%);
+  --earth-bg:    hsl(120 100%  85%);
+  --fire-bg:     hsl( 15 100%  85%);
+  --water-bg:    hsl(200 100%  85%);
+  --void-bg:     hsl(  0   0%  90%);
+  
+  --air-color:   hsl(270 100%  80%);
+  --earth-color: hsl(120 100%  80%);
+  --fire-color:  hsl( 15 100%  80%);
+  --water-color: hsl(200 100%  80%);
+  --void-color:  hsl(  0   0%  70%);
+}
+
+@mixin ring-colored($ring) {
+  --accent-color: var(--ring-bg);
+  --ring-bg: var(--#{$ring}-bg);
+  --ring-color: var(--#{$ring}-color);
+}
+  
+@mixin ring-accented($ring) {
+  @include ring-colored($ring);
+  
+  background-color: var(--accent-color);
+  
+  &:hover {--accent-color: var(--ring-color);}
+}
+  
+@mixin vertical-label() {
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+  color: var(--label-color);
+  font-size: .5rem;
+  width: .7rem;
+  text-align: end;
+  justify-content: flex-end;
+}
+
+.character-sheet---l5r {
+  font-size: calc( 8px + (14 - 8) * (100vw - 400px) / (1600 - 400));
+  padding: 1rem;
+  
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr;
+  grid-template-rows: auto auto auto 10vmax;
+  grid-gap: 1rem;
+  grid-template-areas:
+    "name      name      name"
+    "rings     standing  bg"
+    "rings     vitals    bg"
+    "rings     moves     moves"
+    "skills    moves     moves"
+    "qna       moves     moves";
+  
+  @media screen and (max-width: 900px) {
+    grid-template-areas:
+      "name      name      name"
+      "rings     standing  standing"
+      "rings     vitals    vitals"
+      "rings     moves     moves"
+      "skills    moves     moves"
+      "bg        moves     moves"
+      "qna       moves     moves";
+  }
+  
+  @media screen and (max-width: 500px) {
+    grid-template-columns: 1fr 5fr;
+    grid-template-areas:
+      "name      name"
+      "rings     standing"
+      "rings     vitals"
+      "rings     moves"
+      "skills    moves"
+      "bg        moves"
+      "qna       moves";
+  }
+  
+  dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    
+    dt {
+      text-align: right;
+      color: var(--label-color);
+      padding: 0 .5rem;
+    }
+    
+    dd {
+      border: 0px solid transparent;
+      transition: border 200ms, background-color 200ms, font-weight 0ms, flex-grow 200ms;
+    }
+    
+    &.dl---circles {
+      $circle-size: 3.5vw;
+      
+      display: grid;
+      grid-template-columns: repeat(3, .7rem $circle-size);
+      
+      dt {
+        @include vertical-label();
+      }
+      
+      dd {
+        border: 1px solid var(--circle-color);
+        border-radius: 50%;
+        width: $circle-size;
+        height: $circle-size;
+        text-align: center;
+        line-height: $circle-size;
+        font-size: 2.2vw;
+      }
+    }
+  }
+  
+  .character-sheet {
+    &--name {
+      grid-area: name;
+      background: black;
+      color: white;
+      padding: .3rem;
+    }
+    
+    &--portrait {
+      grid-column-end: -1;
+      align-self: stretch;
+  
+      @media screen and (max-width: 500px) {
+        display: none;
+      }
+      
+      .move--header {
+        display: none;
+      }
+      
+      .move--body {
+        padding: 0;
+        min-height: 20vh;
+        flex-grow: 1;
+        background: var(--portrait-url);
+        background-size: cover;
+        background-position: top;
+      }
+    }
+    
+    &--stance-logos {
+      grid-row: 2 / -1;
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-areas: "stance-logo";
+      
+      z-index: -1;
+      width: 100vmin;
+      margin: auto auto;
+      object-fit: contain;
+      max-width: 90vw;
+
+      opacity: .25;
+    }
+    
+    &--stance-logo {
+      grid-area: stance-logo;
+      transform: scale(0.0001) rotate(180deg);
+      transition: 500ms cubic-bezier(.82,.34,.54,1.2);
+    }
+    
+    &--background {
+      grid-area: bg;
+    }
+    
+    &--social-standing {
+      grid-area: standing;
+    }
+    
+    &--rings {
+      grid-area: rings;
+      align-items: center;
+      justify-items: center;
+      justify-content: end;
+      grid-template-columns: 1fr;
+      
+      dt { display: none; }
+      dd {
+        cursor: pointer;
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-template-columns: 1fr;
+        justify-items: center;
+        border-radius: 50%;
+        line-height: 2;
+        width: 5vmax;
+        height: 5vmax;
+      }
+      
+      @media screen and (min-width: 500px) {
+        grid-template-columns: repeat(11, 1fr);
+        grid-template-rows: repeat(11, 1fr);
+        height: 20vmax;
+        width: 20vmax;
+        
+        dd {
+          font-size: 4.3vmax;
+          width: 90%;
+          height: 90%;
+        }
+      
+        .description-list---air {
+          grid-row: 1 / span 5;
+          grid-column: 6 / span 5;
+        }
+        .description-list---earth {
+          grid-row: 1 / span 5;
+          grid-column: 2 / span 5;
+        }
+        .description-list---fire {
+          grid-row: 5 / span 5;
+          grid-column: 7 / span 5;
+        }
+        .description-list---water {
+          grid-row: 5 / span 5;
+          grid-column: 1 / span 5;
+        }
+        .description-list---void {
+          grid-row: 7 / span 5;
+          grid-column: 4 / span 5;
+        }
+      }
+      
+      .description-list---air {@include ring-accented('air');}
+      .description-list---earth {@include ring-accented('earth');}
+      .description-list---fire {@include ring-accented('fire');}
+      .description-list---water {@include ring-accented('water');}
+      .description-list---void {@include ring-accented('void');}
+    }
+    
+    &--ring-logo {
+      grid-row: 1 / -1;
+      grid-column: 1 / -1;
+      fill: hsl(  0   0%   0% / 10%);
+      width: 95%;
+    }
+    
+    &--skills {
+      grid-area: skills;
+      display: grid;
+      grid-gap: 1rem 0;
+      align-self: flex-start;
+    }
+    
+    &--vitals {
+      grid-area: vitals;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      
+      &-header {
+        @include vertical-label();
+      }
+    }
+    
+    &--rollbox {
+      grid-area: rollbox;
+      display: none;
+    }
+    
+    &--moves {
+      grid-area: moves;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(25ch, 1fr));
+      grid-template-rows: masonry;
+      grid-gap: 1rem;
+      grid-auto-flow: row dense;
+      align-items: flex-start;
+    }
+    
+    &--history {
+      grid-area: qna;
+      height: 10vh;
+      overflow-y: scroll;
+      
+      &-entries {
+        display: grid;
+        grid-gap: 1rem;
+      }
+      &-entry {
+        display: grid;
+        grid-template-areas:
+          "meta question"
+          "meta answer";
+        grid-template-columns: auto 1fr;
+      }
+      &-question {
+        grid-area: question;
+        font-weight: 600;
+        padding: .3rem;
+
+        border-left: 1px solid var(--border-color);
+        border-right: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+      }
+      &-answer {
+        grid-area: answer;
+
+        border-left: 1px solid var(--border-color);
+        border-right: 1px solid var(--border-color);
+        padding: .3rem;
+        font-weight: 100;
+      }
+      &-answer-value {
+        font-weight: 400;
+      }
+      &-meta {
+        grid-area: meta;
+        @include vertical-label();
+      }
+    }
+  }
+  
+  html &.character-sheet---current-stance-is- {
+    &air {--active-stance-bg: var(--air-bg); }
+    &earth {--active-stance-bg: var(--earth-bg); }
+    &fire {--active-stance-bg: var(--fire-bg); }
+    &water {--active-stance-bg: var(--water-bg); }
+    &void {--active-stance-bg: var(--void-bg); }
+
+    &air .character-sheet--stance-logo---air { transform: scale(1); }
+    &earth .character-sheet--stance-logo---earth { transform: scale(1); }
+    &fire .character-sheet--stance-logo---fire { transform: scale(1); }
+    &water .character-sheet--stance-logo---water { transform: scale(1); }
+    &void .character-sheet--stance-logo---void { transform: scale(1); }
+    
+    &air .description-list---air,
+    &earth .description-list---earth,
+    &fire .description-list---fire,
+    &water .description-list---water,
+    &void .description-list---void {
+      font-weight: 600;
+      --accent-color: var(--ring-color);
+       flex-grow: 200;
+    }
+    
+    &air .move---air,
+    &earth .move---earth,
+    &fire .move---fire,
+    &water .move---water,
+    &void .move---void {
+      --accent-color: var(--ring-color);
+      
+      .move--header {
+        --accent-color: var(--ring-color);
+        font-weight: 600;
+        padding: .3rem;
+      }
+    }
+  }
+}
+
+.skill-block---l5r {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  
+  .skill-block {
+    &--header {
+      @include vertical-label();
+    }
+    
+    &--body {
+      border-left: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+    }
+    
+    &--approaches {
+      display: flex;
+      text-align: center;
+      font-size: 80%;
+      cursor: pointer;
+      
+      @media screen and (max-width: 500px) {
+        flex-direction: column;
+      }
+      
+      dt { display: none; }
+      dd {
+       padding: .3rem;
+       flex-grow: 1;
+      }
+      
+      .description-list---air { @include ring-accented('air'); }
+      .description-list---earth { @include ring-accented('earth'); }
+      .description-list---fire { @include ring-accented('fire'); }
+      .description-list---water { @include ring-accented('water'); }
+      .description-list---void { @include ring-accented('void'); }
+    }
+    
+    &--skills {
+      grid-template-columns: 2fr 1fr 2fr 1fr;
+      
+      @media screen and (max-width: 500px) {
+        grid-template-columns: 2fr 1fr;
+      }
+      
+      dd::before {content: "+ ";}
+      
+      dt, dd {
+        padding: .25em;
+      }
+      
+      dt:hover, dt:hover + dd, dd:hover {
+        background-color: var(--active-stance-bg);
+      }
+    }
+  }
+}
+
+.move---l5r {
+  display: grid;
+  grid-template-areas:
+    "about head head"
+    "about body body";
+  grid-template-rows: auto 1fr;
+  grid-template-columns: auto 1fr;
+  
+  &.move---stance {
+    grid-column: 1 / -1;
+    font-size: 130%;
+  }
+  
+  &.move---air {
+    @include ring-colored('air');
+    .move--header { @include ring-accented('air'); }
+  }
+  &.move---earth {
+    @include ring-colored('earth');
+    .move--header { @include ring-accented('earth'); }
+  }
+  &.move---fire {
+    @include ring-colored('fire');
+    .move--header { @include ring-accented('fire'); }
+  }
+  &.move---water {
+    @include ring-colored('water');
+    .move--header { @include ring-accented('water'); }
+  }
+  &.move---void {
+    @include ring-colored('void');
+    .move--header { @include ring-accented('void'); }
+  }
+  
+  .move {
+    &--header, &--body {
+      border-left: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+    }
+    
+    &--header {
+      grid-area: head;
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      padding: .25rem .5rem;
+    }
+    
+    &--category-icon {
+      margin-left: auto;
+      align-self: end;
+    }
+    
+    &--about {
+      grid-area: about;
+      @include vertical-label;
+      display: flex;
+      line-height: .8rem;
+      justify-content: space-between;
+      padding: .2rem 0;
+      
+      > * + * {
+        margin-top: .5rem;
+      }
+    }
+    
+    &--types {
+      li { padding-right: .3em; }
+    }
+    
+    &--body {
+      grid-area: body;
+      padding: .25rem .5rem;
+    }
+  
+    &--detail {
+      --detail-color: transparent;
+      --detail-bg: transparent;
+      --detail-transparent: transparent;
+      
+      margin: 0 -.5rem;
+      padding: 0 .5rem;
+      
+      background: linear-gradient(to right, var(--detail-color), var(--detail-color) .5rem, var(--detail-bg) 0, var(--detail-transparent) 90%);
+      
+      transition: background 200ms;
+    }
+    
+    .character-sheet---current-stance-is-air &--detail---air {--detail-color: var(--air-color); --detail-bg: var(--air-bg); --detail-transparent: var(--air-transparent);}
+    .character-sheet---current-stance-is-earth &--detail---earth {--detail-color: var(--earth-color); --detail-bg: var(--earth-bg); --detail-transparent: var(--earth-transparent);}
+    .character-sheet---current-stance-is-water &--detail---water {--detail-color: var(--water-color); --detail-bg: var(--water-bg); --detail-transparent: var(--water-transparent);}
+    .character-sheet---current-stance-is-fire &--detail---fire {--detail-color: var(--fire-color); --detail-bg: var(--fire-bg); --detail-transparent: var(--fire-transparent);}
+    .character-sheet---current-stance-is-void &--detail---void {--detail-color: var(--void-color); --detail-bg: var(--void-bg); --detail-transparent: var(--void-transparent);}
+  }
+  
+  .move--body {
+    @supports not (grid-template-rows: masonry) {
+      max-height: 25vh;
+      overflow-y: scroll;
+    }
+    
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+    ul {
+      margin-left: .5rem;
+    }
+    del {
+      display: none;
+    }
+  }
+}
+
+.vital-stat---l5r {
+  display: flex;
+  padding: 0 .5rem;
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  line-height: 1.2rem;
+  
+  --fill-color: var(--vital-fill-color);
+  
+  .vital-stat {
+    &--header {
+      width: 50%;
+    }
+    
+    &--actions {
+      flex-grow: 1;
+      display: flex;
+    }
+    
+    &--button {
+      background: white;
+      border-radius: 3px;
+      border: 1px solid var(--control-border-color);
+      border-right-width: 0;
+      padding: 0 1rem;
+      margin: 1px 0;
+      
+      &:first-child { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+      &:last-child {  border-top-left-radius: 0;  border-bottom-left-radius: 0; border-right-width: 1px; }
+      
+      &[disabled] { opacity: .6; }
+    }
+  }
+  
+  &.vital-stat {
+    &---max {
+      --fill-color: var(--vital-fill-color-max);
+
+      &.vital-stat---more-is-better {
+        --fill-color: var(--vital-fill-color-max-good);
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+<article class='rollbox {{if @collapsed "rollbox---collapsed"}}' ...attributes>
+  <header class='rollbox--header'>
+    <label>Ring dice <Input class='rollbox--ring' @type='number' @value={{ringCount}} min='0'/></label>
+    <label>Skill dice <Input class='rollbox--skill' @type='number' @value={{skillCount}} min='0'/></label>
+    <button class='rollbox--trigger' {{on "click" (fn roll)}}>Roll!</button>
+  </header>
+  
+  {{yield}}
+  
+  {{#each dicePools as |pool ix|}}
+    {{#unless ix}}
+      <span class='badge badge---info'>Keep {{ringsRolled.length}} dice by clicking them. Use your rerolls if you have them. Then roll any exploding dice.</span>
+    {{/unless}}
+    <L5r::DiceTray @pool={{pool}} class='rollbox--current-dice-tray' @onReroll={{onReroll}} />
+  {{/each}}
+  
+  <article class='rollbox--actions'>
+    {{#if exploding}}
+      <a href='#' class='rollbox--action rollbox--action---roll-exploding' {{on "click" (fn this.rollExploding)}}>roll {{exploding}} exploding</a>
+    {{/if}}
+    <a href='#' class='rollbox--action rollbox--action---add-ring-die' {{on "click" (fn this.addDie 'ring')}}>+ Ring</a>
+    <a href='#' class='rollbox--action rollbox--action---add-skill-die' {{on "click" (fn this.addDie 'skill')}}>+ Skill</a>
+  </article>
+  
+  <dl class='rollbox--outcome'>
+    <dt>keeps left</dt>
+    <dd>
+      <output class='rollbox--output'>
+        {{keepsLeft}}
+        {{#if underkept}}<span class='badge badge---info'>Click dice to keep them</span>{{/if}}
+        {{#if overkept}}<span class='badge badge---error'>You have kept too many dice!</span>{{/if}}
+      </output>
+    </dd>
+    
+    {{#if successes}}
+      <dt>
+        <svg height='20' viewBox='0 0 20 20'><use xlink:href='#success' /></svg>
+        {{#if exploding}}
+          +
+          <svg height='20' viewBox='0 0 20 20'><use xlink:href='#explode' /></svg>
+        {{/if}}
+        successes
+      </dt>
+      <dd>{{successes}}</dd>
+    {{/if}}
+    
+    {{#if opportunities}}
+      <dt><svg height='20' viewBox='0 0 20 20'><use xlink:href='#opportunity' /></svg> opportunities</dt>
+      <dd>{{opportunities}}</dd>
+    {{/if}}
+    
+    {{#if strife}}
+      <dt><svg height='20' viewBox='0 0 20 20'><use xlink:href='#strife' /></svg> strife</dt>
+      <dd>{{strife}}</dd>
+    {{/if}}
+    
+    {{#if rerolls}}
+      <dt>rerolls</dt>
+      <dd>{{rerolls}}</dd>
+    {{/if}}
+  </dl>
+</article>
